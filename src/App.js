@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import Form from './components/Form';
+import Recipes from './components/Recipes';
 
 const API_KEY = "d24be35447227614de83775872abab05";
 
@@ -20,6 +21,17 @@ class App extends Component {
     console.log(this.state.recipes);
   };
 
+  componentDidMount = () => {
+    const json = localStorage.getItem("recipes");
+    const recipes = JSON.parse(json);
+    this.setState({ recipes });
+  }
+
+  componentDidUpdate = () => {
+    const recipes = JSON.stringify(this.state.recipes);
+    localStorage.setItem("recipes", recipes);
+  }
+
   render() {
     return (
       <div className="App">
@@ -27,14 +39,7 @@ class App extends Component {
           <h1 className="App-title">Recipe Search</h1>
         </header>
         <Form getRecipe={this.getRecipe} />
-        { this.state.recipes.map((recipe) => {
-          return (
-            <div key={recipe.recipe_id}>
-              <img src={recipe.image_url} alt={recipe.title}/>
-              <p>{ recipe.title }</p>
-            </div>
-          );
-        }) }
+        <Recipes recipes={this.state.recipes}/>
       </div>
     );
   }
